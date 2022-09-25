@@ -1,5 +1,5 @@
 from pathlib import Path
-import shutil, sys
+import shutil, sys, os
 
 class Dir:
   def __init__(self, name, content):
@@ -115,10 +115,56 @@ def getFolder():
         zx.close()
     print('\nFiles recovered successfully\n')
 
+def removeLine(start, rangee):
+    start = start - 1
+    with open("data.txt", "r+") as f:
+        d = f.readlines()
+        f.seek(0)
+        for index,l in enumerate(d):
+            if index < start:
+                f.write(l)
+                continue
+            if index >= start and index < (start + rangee): continue
+            f.write(l)
+        f.truncate()
+
+def deleteFolder():
+    print('Loading data..')
+    directories = []
+    f = open('data.txt', 'r')
+    lines = f.readlines()
+    for index,line in enumerate(lines):
+        if line == '[START]\n':
+            foldername = lines[index + 1]
+            foldername = foldername.replace('\n', '')
+            data = readData(index + 1, foldername)
+            directories.append(Dir(foldername, data))
+    f.close()
+    print('Choose an option:')
+    for index,x in enumerate(directories):
+        print(f'{index + 1}){x.name}')
+    position = int(input('Option:')) - 1
+    f = open('data.txt', 'r')
+    lines = f.readlines()
+    count = 0
+    start = 0
+    filenumber = len(directories[position].content)
+    print('Removing data..')
+    for index,line in enumerate(lines):
+        if line == '[START]\n': count = count + 1
+        if (count - 1) == position: 
+            start = index + 1
+            break
+    deleted = 3 + (4 * filenumber)
+    removeLine(start, deleted)
+    f.close()
+    print('Data removed successfully')
+
 def main():
     answer = showMenu()
     while answer != 9:
         if answer == 1: saveFolder(input('Folder name: '))
         if answer == 2: getFolder()
+        if answer == 3: deleteFolder()
         answer = showMenu()
 main()
