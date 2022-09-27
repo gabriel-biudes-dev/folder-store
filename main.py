@@ -20,6 +20,7 @@ def showMenu():
     print('[MENU]')
     print('\t1)Save folder')
     print('\t2)Restore folder')
+    print('\t3)Delete folder data')
     return int(input('Option: '))
 
 def getFiles(p):
